@@ -1202,13 +1202,14 @@ def ensure_menu_course_templates(conn):
         filtered_templates,
     )
 
-    inserted_rows = conn.execute(
+        inserted_rows = conn.execute(
         """
         SELECT id, name
         FROM dish_templates
-        WHERE name LIKE 'Entrée % Nice #%' OR name LIKE 'Dessert % Nice #%'
+        WHERE name LIKE ? OR name LIKE ?
         ORDER BY id
-        """
+        """,
+        ("Entrée % Nice #%", "Dessert % Nice #%"),
     ).fetchall()
     inserted_map = {row["name"]: row["id"] for row in inserted_rows}
 
