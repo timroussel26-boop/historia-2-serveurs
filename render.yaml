@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: historia-inventory
+    runtime: docker
+    dockerfilePath: ./Dockerfile.inventory
+    healthCheckPath: /api/health
+    envVars:
+      - key: DB_ENGINE
+        value: postgres
+      - key: DATABASE_URL
+        sync: false
+      - key: INVENTORY_HOST
+        value: 0.0.0.0
+      - key: INVENTORY_PORT
+        value: 4100
+
+  - type: web
+    name: historia-ai
+    runtime: docker
+    dockerfilePath: ./Dockerfile.ai
+    healthCheckPath: /api/health
+    envVars:
+      - key: AI_HOST
+        value: 0.0.0.0
+      - key: AI_PORT
+        value: 4200
+      - key: INVENTORY_URL
+        sync: false
+      - key: ADMIN_ALLOWED_IPS
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+      - key: ORDERS_DB_PATH
+        value: /tmp/historia_orders.db

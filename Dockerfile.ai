@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY ai_server.py ./
+COPY public ./public
+
+EXPOSE 4200
+
+ENV AI_HOST=0.0.0.0
+CMD ["python", "ai_server.py"]

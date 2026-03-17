@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HistorIA Admin</title>
+  <style>
+    :root {
+      --bg: #f3f5f2;
+      --panel: #ffffff;
+      --ink: #1e2f26;
+      --muted: #5b6c62;
+      --line: rgba(30, 47, 38, 0.15);
+      --brand: #226a4b;
+      --brand-2: #2f8b61;
+      --danger: #9b2c2c;
+      --warn: #8f6514;
+      --ok: #2f855a;
+      --radius: 14px;
+      --shadow: 0 12px 28px rgba(20, 35, 28, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(34, 106, 75, 0.1), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(143, 101, 20, 0.1), transparent 35%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .topbar {
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, #164332, #226a4b 55%, #2f8b61);
+      color: #fff;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .topbar h1 { margin: 0; font-size: clamp(1.2rem, 2vw, 1.7rem); }
+    .topbar p { margin: 4px 0 0; font-size: 0.88rem; opacity: 0.9; }
+
+    .nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .nav a {
+      text-decoration: none;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      min-height: 80px;
+    }
+
+    .kpi .k { font-size: 0.72rem; text-transform: uppercase; color: var(--muted); font-weight: 800; letter-spacing: 0.03em; }
+    .kpi .v { margin-top: 6px; font-size: 1.22rem; font-weight: 800; color: #194832; }
+
+    .status {
+      border: 1px solid rgba(34, 106, 75, 0.2);
+      background: #eef8f2;
+      color: #1b5d40;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .status.error {
+      border-color: rgba(155, 44, 44, 0.25);
+      background: #fff2f2;
+      color: #8f2d2d;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(120deg, #f2f7f4, #ffffff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h2,
+    .panel-head h3 { margin: 0; font-size: 0.97rem; color: #1f4f38; }
+
+    .panel-body { padding: 10px; }
+
+    .muted { color: var(--muted); font-size: 0.8rem; }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+      font-size: 0.87rem;
+    }
+
+    input,
+    select,
+    textarea {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 8px 9px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea { min-height: 66px; resize: vertical; }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .btn-primary { color: #fff; background: linear-gradient(120deg, var(--brand), var(--brand-2)); }
+    .btn-muted { color: #214a35; background: #edf3ef; border: 1px solid rgba(33, 74, 53, 0.17); }
+    .btn-danger { color: var(--danger); background: #fff1f1; border: 1px solid rgba(155, 44, 44, 0.22); }
+
+    .table-wrap {
+      max-height: 390px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+      font-size: 0.79rem;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 7px;
+      border-bottom: 1px solid rgba(30, 47, 38, 0.1);
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #f5faf7;
+      z-index: 2;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #4f655a;
+    }
+
+    .row-selected { outline: 2px solid rgba(34, 106, 75, 0.4); outline-offset: -2px; }
+    .row-low { background: #fff4f4; }
+
+    .badge {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 4px 7px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .b-ok { background: #ebfbee; color: var(--ok); border-color: rgba(47, 133, 90, 0.22); }
+    .b-warn { background: #fff8ea; color: var(--warn); border-color: rgba(143, 101, 20, 0.22); }
+    .b-danger { background: #fff2f2; color: var(--danger); border-color: rgba(155, 44, 44, 0.24); }
+    .b-soft { background: #eef3f0; color: #44584e; border-color: rgba(68, 88, 78, 0.2); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .form-grid label {
+      display: grid;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #3e5449;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .section-title {
+      margin: 10px 0 6px;
+      font-size: 0.82rem;
+      color: #2d4f3d;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mini {
+      padding: 5px 7px;
+      border-radius: 7px;
+      font-size: 0.75rem;
+    }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .price-box {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfdfc;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .insights-list {
+      display: grid;
+      gap: 6px;
+      max-height: 220px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #f8fbf9;
+      padding: 7px;
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 1260px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      .filters { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>HistorIA Admin</h1>
+        <p>Pilotage ingredients + plats + prix + exports compta (sans login, protection IP).</p>
+      </div>
+      <nav class="nav">
+        <a href="/indexe2.0.html">Espace client</a>
+        <a href="/api/admin/ops" target="_blank" rel="noopener">API OPS</a>
+      </nav>
+    </header>
+
+    <section class="status" id="status">Espace admin actif.</section>
+
+    <section class="kpis">
+      <article class="kpi"><div class="k">Ingredients</div><div class="v" id="kpi-total">...</div></article>
+      <article class="kpi"><div class="k">Stock total</div><div class="v" id="kpi-units">...</div></article>
+      <article class="kpi"><div class="k">Critiques</div><div class="v" id="kpi-low">...</div></article>
+      <article class="kpi"><div class="k">Plats actifs</div><div class="v" id="kpi-dishes">...</div></article>
+      <article class="kpi"><div class="k">Derniere synchro</div><div class="v" id="kpi-sync" style="font-size:1rem;">...</div></article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <header class="panel-head">
+          <h2>Inventaire ingredients</h2>
+          <button class="btn-primary" id="refresh-ingredients-btn">Rafraichir</button>
+        </header>
+        <div class="panel-body">
+          <div class="filters">
+            <input id="ing-search" type="text" placeholder="Rechercher ingredient / fournisseur / provenance">
+            <select id="ing-category"><option value="">Toutes categories</option></select>
+            <label><input id="ing-low-only" type="checkbox"> critiques</label>
+            <button class="btn-muted" id="ing-clear">Effacer</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ingredient</th>
+                  <th>Categorie</th>
+                  <th>Stock</th>
+                  <th>Seuil</th>
+                  <th>Statut</th>
+                  <th>Fournisseur</th>
+                  <th>Provenance</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ingredients-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header class="panel-head">
+          <h2>Edition ingredient</h2>
+          <span class="muted" id="ingredient-hint">Selectionne un ingredient</span>
+        </header>
+        <div class="panel-body">
+          <div class="form-grid">
+            <label>Nom<input id="f-name" type="text" disabled></label>
+            <label>Categorie<input id="f-category" type="text" disabled></label>
+            <label>Unite<input id="f-unit" type="text" disabled></label>
+            <label>Regimes csv<input id="f-diets" type="text" disabled></label>
+            <label>Stock<input id="f-stock" type="number" step="0.01" min="0" disabled></label>
+            <label>Seuil min<input id="f-min-stock" type="number" step="0.01" min="0" disabled></label>
+            <label>Cout / unite<input id="f-cost" type="number" step="0.0001" min="0" disabled></label>
+            <label>CO2 / unite<input id="f-co2" type="number" step="0.0001" min="0" disabled></label>
+            <label class="full">Fournisseur<input id="f-supplier" type="text" disabled></label>
+            <label class="full">Provenance<input id="f-provenance" type="text" disabled></label>
+          </div>
+          <div class="actions">
+            <button class="btn-primary" id="save-ingredient-btn" disabled>Enregistrer</button>
+            <button class="btn-danger" id="set-stock-btn" disabled>Definir stock</button>
+            <button class="btn-muted" id="cancel-ingredient-btn" disabled>Annuler</button>
+          </div>
+
+          <div class="section-title">Nouveau ingredient (POST admin)</div>
+          <div class="form-grid">
+            <label>Nom<input id="c-name" type="text" placeholder="ex: Citron confit niçois"></label>
+            <label>Categorie<input id="c-category" type="text" placeholder="ex: garnish"></label>
+            <label>Unite<input id="c-unit" type="text" placeholder="g / ml / piece"></label>
+            <label>Regimes csv<input id="c-diets" type="text" placeholder="vegan,vegetarian,pescatarian,omnivore"></label>
+            <label>Stock initial<input id="c-stock" type="number" step="0.01" min="0" value="0"></label>
+            <label>Seuil min<input id="c-min-stock" type="number" step="0.01" min="0" value="0"></label>
+            <label>Cout / unite<input id="c-cost" type="number" step="0.0001" min="0" value="0"></label>
+            <label>CO2 / unite<input id="c-co2" type="number" step="0.0001" min="0" value="0"></label>
+            <label class="full">Fournisseur<input id="c-supplier" type="text" placeholder="ex: Producteurs Nice"></label>
+            <label class="full">Provenance<input id="c-provenance" type="text" placeholder="ex: Nice et alentours (Alpes-Maritimes)"></label>
+          </div>
+          <div class="actions">
+            <button class="btn-primary" id="create-ingredient-btn">Creer ingredient</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <header class="panel-head">
+          <h2>Gestion des plats</h2>
+          <button class="btn-primary" id="refresh-dishes-btn">Rafraichir</button>
+        </header>
+        <div class="panel-body">
+          <div class="filters">
+            <input id="dish-search" type="text" placeholder="Rechercher plat / style / histoire">
+            <select id="dish-course">
+              <option value="">Tous cours</option>
+              <option value="entree">Entree</option>
+              <option value="main">Plat</option>
+              <option value="dessert">Dessert</option>
+            </select>
+            <select id="dish-active">
+              <option value="">Tous</option>
+              <option value="active">Actifs</option>
+              <option value="inactive">Inactifs</option>
+            </select>
+            <button class="btn-muted" id="dish-clear">Effacer</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Cours</th>
+                  <th>Regime</th>
+                  <th>Style</th>
+                  <th>Prix base</th>
+                  <th>Stock live</th>
+                  <th>Actif</th>
+                </tr>
+              </thead>
+              <tbody id="dishes-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header class="panel-head">
+          <h2>Edition plat</h2>
+          <span class="muted" id="dish-hint">Selectionne un plat</span>
+        </header>
+        <div class="panel-body">
+          <div class="form-grid">
+            <label>ID<input id="d-id" type="text" disabled></label>
+            <label>Nom<input id="d-name" type="text" disabled></label>
+            <label>Cours
+              <select id="d-course" disabled>
+                <option value="entree">Entree</option>
+                <option value="main">Plat</option>
+                <option value="dessert">Dessert</option>
+              </select>
+            </label>
+            <label>Regime
+              <select id="d-diet" disabled>
+                <option value="omnivore">omnivore</option>
+                <option value="pescatarian">pescatarian</option>
+                <option value="vegetarian">vegetarian</option>
+                <option value="vegan">vegan</option>
+              </select>
+            </label>
+            <label>Style<input id="d-style" type="text" disabled></label>
+            <label>Prix base EUR<input id="d-price" type="number" step="0.01" min="0" disabled></label>
+            <label class="full">Image URL<input id="d-image" type="text" disabled></label>
+            <label class="full">Histoire<textarea id="d-story" disabled></textarea></label>
+            <label>Actif
+              <select id="d-active" disabled>
+                <option value="1">oui</option>
+                <option value="0">non</option>
+              </select>
+            </label>
+            <label>Disponibilite live<input id="d-live" type="text" disabled></label>
+          </div>
+          <div class="actions">
+            <button class="btn-primary" id="save-dish-btn" disabled>Enregistrer plat</button>
+            <button class="btn-muted" id="cancel-dish-btn" disabled>Annuler</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <header class="panel-head">
+          <h3>Prix officiels</h3>
+          <span class="muted">Menus + a la carte</span>
+        </header>
+        <div class="panel-body">
+          <div class="price-grid">
+            <div class="price-box">
+              <strong>Menu decouverte</strong>
+              <input id="p-menu-decouverte" type="number" min="1" step="0.01">
+              <button class="btn-primary" id="save-menu-decouverte">Enregistrer</button>
+            </div>
+            <div class="price-box">
+              <strong>Menu signature</strong>
+              <input id="p-menu-signature" type="number" min="1" step="0.01">
+              <button class="btn-primary" id="save-menu-signature">Enregistrer</button>
+            </div>
+            <div class="price-box">
+              <strong>Entree seule</strong>
+              <input id="p-single-entree" type="number" min="1" step="0.01">
+              <button class="btn-primary" id="save-single-entree">Enregistrer</button>
+            </div>
+            <div class="price-box">
+              <strong>Plat seul</strong>
+              <input id="p-single-main" type="number" min="1" step="0.01">
+              <button class="btn-primary" id="save-single-main">Enregistrer</button>
+            </div>
+            <div class="price-box">
+              <strong>Dessert seul</strong>
+              <input id="p-single-dessert" type="number" min="1" step="0.01">
+              <button class="btn-primary" id="save-single-dessert">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header class="panel-head">
+          <h3>Stock intelligent</h3>
+          <button class="btn-muted" id="refresh-insights-btn">Rafraichir</button>
+        </header>
+        <div class="panel-body">
+          <p class="muted" id="insights-summary">Chargement...</p>
+          <div class="insights-list" id="insights-list"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="panel">
+        <header class="panel-head">
+          <h3>Exports compta</h3>
+          <span class="muted">CSV + PDF journalier</span>
+        </header>
+        <div class="panel-body">
+          <div class="filters" style="grid-template-columns:1fr auto auto auto;">
+            <input id="orders-date" type="date">
+            <button class="btn-muted" id="load-orders-btn">Afficher</button>
+            <button class="btn-primary" id="download-csv-btn">Exporter CSV</button>
+            <button class="btn-primary" id="download-pdf-btn">Exporter PDF</button>
+          </div>
+          <p class="muted" id="orders-summary">Aucune donnee chargee.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Heure</th>
+                  <th>Table</th>
+                  <th>Formule</th>
+                  <th>Couverts</th>
+                  <th>Montant</th>
+                  <th>Plats</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <header class="panel-head">
+          <h3>Securite admin</h3>
+          <span class="badge b-soft">sans login</span>
+        </header>
+        <div class="panel-body">
+          <p class="muted">Cette interface n'utilise pas de mot de passe. La protection repose sur l'allowlist IP configuree sur le serveur AI (`ADMIN_ALLOWED_IPS`).</p>
+          <ul class="muted" style="margin:8px 0 0; padding-left:18px; line-height:1.5;">
+            <li>Routes admin reservees a des IP autorisees.</li>
+            <li>Headers de securite actifs (nosniff, frame, referrer).</li>
+            <li>Actions critiques tracees dans les journaux serveur.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      ingredients: [],
+      ingredientFiltered: [],
+      selectedIngredientId: null,
+      dishes: [],
+      dishFiltered: [],
+      selectedDishId: null,
+      pricing: {},
+      orders: [],
+      loading: false,
+    };
+
+    const els = {
+      status: document.getElementById("status"),
+      kpiTotal: document.getElementById("kpi-total"),
+      kpiUnits: document.getElementById("kpi-units"),
+      kpiLow: document.getElementById("kpi-low"),
+      kpiDishes: document.getElementById("kpi-dishes"),
+      kpiSync: document.getElementById("kpi-sync"),
+
+      ingSearch: document.getElementById("ing-search"),
+      ingCategory: document.getElementById("ing-category"),
+      ingLowOnly: document.getElementById("ing-low-only"),
+      ingClear: document.getElementById("ing-clear"),
+      refreshIngredientsBtn: document.getElementById("refresh-ingredients-btn"),
+      ingredientsBody: document.getElementById("ingredients-body"),
+
+      ingredientHint: document.getElementById("ingredient-hint"),
+      fName: document.getElementById("f-name"),
+      fCategory: document.getElementById("f-category"),
+      fUnit: document.getElementById("f-unit"),
+      fDiets: document.getElementById("f-diets"),
+      fStock: document.getElementById("f-stock"),
+      fMinStock: document.getElementById("f-min-stock"),
+      fCost: document.getElementById("f-cost"),
+      fCo2: document.getElementById("f-co2"),
+      fSupplier: document.getElementById("f-supplier"),
+      fProvenance: document.getElementById("f-provenance"),
+      saveIngredientBtn: document.getElementById("save-ingredient-btn"),
+      setStockBtn: document.getElementById("set-stock-btn"),
+      cancelIngredientBtn: document.getElementById("cancel-ingredient-btn"),
+
+      cName: document.getElementById("c-name"),
+      cCategory: document.getElementById("c-category"),
+      cUnit: document.getElementById("c-unit"),
+      cDiets: document.getElementById("c-diets"),
+      cStock: document.getElementById("c-stock"),
+      cMinStock: document.getElementById("c-min-stock"),
+      cCost: document.getElementById("c-cost"),
+      cCo2: document.getElementById("c-co2"),
+      cSupplier: document.getElementById("c-supplier"),
+      cProvenance: document.getElementById("c-provenance"),
+      createIngredientBtn: document.getElementById("create-ingredient-btn"),
+
+      dishSearch: document.getElementById("dish-search"),
+      dishCourse: document.getElementById("dish-course"),
+      dishActive: document.getElementById("dish-active"),
+      dishClear: document.getElementById("dish-clear"),
+      refreshDishesBtn: document.getElementById("refresh-dishes-btn"),
+      dishesBody: document.getElementById("dishes-body"),
+      dishHint: document.getElementById("dish-hint"),
+      dId: document.getElementById("d-id"),
+      dName: document.getElementById("d-name"),
+      dCourse: document.getElementById("d-course"),
+      dDiet: document.getElementById("d-diet"),
+      dStyle: document.getElementById("d-style"),
+      dPrice: document.getElementById("d-price"),
+      dImage: document.getElementById("d-image"),
+      dStory: document.getElementById("d-story"),
+      dActive: document.getElementById("d-active"),
+      dLive: document.getElementById("d-live"),
+      saveDishBtn: document.getElementById("save-dish-btn"),
+      cancelDishBtn: document.getElementById("cancel-dish-btn"),
+
+      pMenuDecouverte: document.getElementById("p-menu-decouverte"),
+      pMenuSignature: document.getElementById("p-menu-signature"),
+      pSingleEntree: document.getElementById("p-single-entree"),
+      pSingleMain: document.getElementById("p-single-main"),
+      pSingleDessert: document.getElementById("p-single-dessert"),
+      saveMenuDecouverte: document.getElementById("save-menu-decouverte"),
+      saveMenuSignature: document.getElementById("save-menu-signature"),
+      saveSingleEntree: document.getElementById("save-single-entree"),
+      saveSingleMain: document.getElementById("save-single-main"),
+      saveSingleDessert: document.getElementById("save-single-dessert"),
+
+      refreshInsightsBtn: document.getElementById("refresh-insights-btn"),
+      insightsSummary: document.getElementById("insights-summary"),
+      insightsList: document.getElementById("insights-list"),
+
+      ordersDate: document.getElementById("orders-date"),
+      loadOrdersBtn: document.getElementById("load-orders-btn"),
+      downloadCsvBtn: document.getElementById("download-csv-btn"),
+      downloadPdfBtn: document.getElementById("download-pdf-btn"),
+      ordersSummary: document.getElementById("orders-summary"),
+      ordersBody: document.getElementById("orders-body"),
+    };
+
+    function setStatus(message, isError = false) {
+      els.status.textContent = message;
+      els.status.classList.toggle("error", isError);
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(path, {
+        method: options.method || "GET",
+        headers: { "Content-Type": "application/json" },
+        body: options.body ? JSON.stringify(options.body) : undefined,
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(payload.error || `Erreur ${res.status}`);
+      }
+      return payload;
+    }
+
+    function fmt(value, digits = 2) {
+      return Number(value || 0).toFixed(digits);
+    }
+
+    function nowDateInputValue() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function selectedIngredient() {
+      return state.ingredients.find((item) => item.id === state.selectedIngredientId) || null;
+    }
+
+    function selectedDish() {
+      return state.dishes.find((item) => item.id === state.selectedDishId) || null;
+    }
+
+    function setIngredientEditorEnabled(enabled) {
+      [
+        els.fName, els.fCategory, els.fUnit, els.fDiets, els.fStock,
+        els.fMinStock, els.fCost, els.fCo2, els.fSupplier, els.fProvenance,
+      ].forEach((input) => { input.disabled = !enabled; });
+      els.saveIngredientBtn.disabled = !enabled;
+      els.setStockBtn.disabled = !enabled;
+      els.cancelIngredientBtn.disabled = !enabled;
+    }
+
+    function clearIngredientEditor() {
+      state.selectedIngredientId = null;
+      setIngredientEditorEnabled(false);
+      [
+        els.fName, els.fCategory, els.fUnit, els.fDiets, els.fStock,
+        els.fMinStock, els.fCost, els.fCo2, els.fSupplier, els.fProvenance,
+      ].forEach((input) => { input.value = ""; });
+      els.ingredientHint.textContent = "Selectionne un ingredient";
+      renderIngredients();
+    }
+
+    function selectIngredient(id) {
+      state.selectedIngredientId = id;
+      const ing = selectedIngredient();
+      if (!ing) {
+        clearIngredientEditor();
+        return;
+      }
+      setIngredientEditorEnabled(true);
+      els.ingredientHint.textContent = `${ing.name} (#${ing.id})`;
+      els.fName.value = ing.name;
+      els.fCategory.value = ing.category;
+      els.fUnit.value = ing.unit;
+      els.fDiets.value = ing.diets;
+      els.fStock.value = fmt(ing.stock);
+      els.fMinStock.value = fmt(ing.min_stock);
+      els.fCost.value = fmt(ing.cost_per_unit, 4);
+      els.fCo2.value = fmt(ing.co2_per_unit, 4);
+      els.fSupplier.value = ing.supplier;
+      els.fProvenance.value = ing.provenance;
+      renderIngredients();
+    }
+
+    function applyIngredientFilters() {
+      const q = els.ingSearch.value.trim().toLowerCase();
+      const cat = els.ingCategory.value;
+      const lowOnly = els.ingLowOnly.checked;
+      state.ingredientFiltered = state.ingredients.filter((item) => {
+        if (cat && item.category !== cat) {
+          return false;
+        }
+        if (lowOnly && item.low_stock !== 1) {
+          return false;
+        }
+        if (!q) {
+          return true;
+        }
+        const text = [item.name, item.category, item.supplier, item.provenance, item.diets].join(" ").toLowerCase();
+        return text.includes(q);
+      });
+      renderIngredients();
+    }
+
+    function renderIngredients() {
+      if (!state.ingredientFiltered.length) {
+        els.ingredientsBody.innerHTML = '<tr><td colspan="8" class="muted">Aucun ingredient</td></tr>';
+        return;
+      }
+      const rows = state.ingredientFiltered.map((item) => {
+        const status = item.low_stock === 1
+          ? '<span class="badge b-danger">critique</span>'
+          : '<span class="badge b-ok">ok</span>';
+
+        const trClass = [
+          item.low_stock === 1 ? "row-low" : "",
+          state.selectedIngredientId === item.id ? "row-selected" : "",
+        ].join(" ").trim();
+
+        return `
+          <tr class="${trClass}" data-ingredient-id="${item.id}">
+            <td><strong>${item.name}</strong><br><span class="muted">#${item.id} • ${item.unit}</span></td>
+            <td>${item.category}</td>
+            <td>${fmt(item.stock)} ${item.unit}</td>
+            <td>${fmt(item.min_stock)}</td>
+            <td>${status}</td>
+            <td>${item.supplier}</td>
+            <td>${item.provenance}</td>
+            <td>
+              <button class="mini btn-muted" data-action="edit" data-id="${item.id}">Editer</button>
+              <button class="mini btn-primary" data-action="restock" data-id="${item.id}">+50</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+      els.ingredientsBody.innerHTML = rows;
+
+      [...els.ingredientsBody.querySelectorAll("button[data-action='edit']")].forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectIngredient(Number(btn.dataset.id));
+        });
+      });
+
+      [...els.ingredientsBody.querySelectorAll("button[data-action='restock']")].forEach((btn) => {
+        btn.addEventListener("click", async (event) => {
+          event.stopPropagation();
+          const ingredientId = Number(btn.dataset.id);
+          try {
+            await api("/api/admin/restock", { method: "POST", body: { ingredient_id: ingredientId, quantity: 50 } });
+            setStatus("Restock +50 applique.");
+            await loadIngredients(false);
+          } catch (error) {
+            setStatus(error.message, true);
+          }
+        });
+      });
+
+      [...els.ingredientsBody.querySelectorAll("tr[data-ingredient-id]")].forEach((tr) => {
+        tr.addEventListener("click", () => selectIngredient(Number(tr.dataset.ingredientId)));
+      });
+    }
+
+    function refreshIngredientCategories() {
+      const categories = [...new Set(state.ingredients.map((item) => item.category))].sort();
+      const current = els.ingCategory.value;
+      els.ingCategory.innerHTML = '<option value="">Toutes categories</option>' +
+        categories.map((cat) => `<option value="${cat}">${cat}</option>`).join("");
+      if (categories.includes(current)) {
+        els.ingCategory.value = current;
+      }
+    }
+
+    async function loadIngredients(showStatus = true) {
+      if (showStatus) {
+        setStatus("Sync ingredients...");
+      }
+      const [ingredientsRes, summaryRes] = await Promise.all([
+        api("/api/admin/ingredients"),
+        api("/api/admin/stock-summary"),
+      ]);
+      state.ingredients = ingredientsRes.ingredients || [];
+      refreshIngredientCategories();
+      applyIngredientFilters();
+
+      els.kpiTotal.textContent = String(summaryRes.total_ingredients ?? state.ingredients.length);
+      els.kpiUnits.textContent = fmt(summaryRes.total_units ?? 0);
+      els.kpiLow.textContent = String(summaryRes.low_stock_count ?? 0);
+      els.kpiSync.textContent = new Date().toLocaleTimeString("fr-FR");
+
+      if (state.selectedIngredientId !== null) {
+        const exists = state.ingredients.some((item) => item.id === state.selectedIngredientId);
+        if (!exists) {
+          clearIngredientEditor();
+        } else {
+          selectIngredient(state.selectedIngredientId);
+        }
+      }
+    }
+
+    async function saveIngredient() {
+      const ing = selectedIngredient();
+      if (!ing) {
+        setStatus("Aucun ingredient selectionne.", true);
+        return;
+      }
+      const payload = {
+        ingredient_id: ing.id,
+        name: els.fName.value.trim(),
+        category: els.fCategory.value.trim(),
+        unit: els.fUnit.value.trim(),
+        diets: els.fDiets.value.trim(),
+        min_stock: Number(els.fMinStock.value),
+        cost_per_unit: Number(els.fCost.value),
+        co2_per_unit: Number(els.fCo2.value),
+        supplier: els.fSupplier.value.trim(),
+        provenance: els.fProvenance.value.trim(),
+      };
+      try {
+        setStatus("Mise a jour ingredient...");
+        await api("/api/admin/ingredient-update", { method: "POST", body: payload });
+        await api("/api/admin/stock-set", {
+          method: "POST",
+          body: { ingredient_id: ing.id, stock: Number(els.fStock.value) },
+        });
+        setStatus("Ingredient mis a jour.");
+        await loadIngredients(false);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    async function setIngredientStock() {
+      const ing = selectedIngredient();
+      if (!ing) {
+        setStatus("Aucun ingredient selectionne.", true);
+        return;
+      }
+      const stock = Number(els.fStock.value);
+      if (Number.isNaN(stock) || stock < 0) {
+        setStatus("Stock invalide.", true);
+        return;
+      }
+      try {
+        setStatus("Mise a jour stock...");
+        await api("/api/admin/stock-set", { method: "POST", body: { ingredient_id: ing.id, stock } });
+        setStatus("Stock mis a jour.");
+        await loadIngredients(false);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    async function createIngredient() {
+      const payload = {
+        name: els.cName.value.trim(),
+        category: els.cCategory.value.trim(),
+        unit: els.cUnit.value.trim(),
+        diets: els.cDiets.value.trim(),
+        stock: Number(els.cStock.value),
+        min_stock: Number(els.cMinStock.value),
+        cost_per_unit: Number(els.cCost.value),
+        co2_per_unit: Number(els.cCo2.value),
+        supplier: els.cSupplier.value.trim(),
+        provenance: els.cProvenance.value.trim(),
+      };
+      if (!payload.name || !payload.category || !payload.unit || !payload.diets || !payload.supplier || !payload.provenance) {
+        setStatus("Champs requis manquants.", true);
+        return;
+      }
+      try {
+        setStatus("Creation ingredient...");
+        await api("/api/admin/ingredient-create", { method: "POST", body: payload });
+        setStatus("Ingredient cree.");
+        [els.cName, els.cCategory, els.cUnit, els.cDiets, els.cSupplier, els.cProvenance].forEach((input) => { input.value = ""; });
+        [els.cStock, els.cMinStock, els.cCost, els.cCo2].forEach((input) => { input.value = "0"; });
+        await loadIngredients(false);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    function applyDishFilters() {
+      const q = els.dishSearch.value.trim().toLowerCase();
+      const course = els.dishCourse.value;
+      const active = els.dishActive.value;
+      state.dishFiltered = state.dishes.filter((dish) => {
+        if (course && dish.course !== course) {
+          return false;
+        }
+        if (active === "active" && Number(dish.is_active) !== 1) {
+          return false;
+        }
+        if (active === "inactive" && Number(dish.is_active) !== 0) {
+          return false;
+        }
+        if (!q) {
+          return true;
+        }
+        const text = [dish.name, dish.style, dish.story, dish.diet].join(" ").toLowerCase();
+        return text.includes(q);
+      });
+      renderDishes();
+    }
+
+    function renderDishes() {
+      if (!state.dishFiltered.length) {
+        els.dishesBody.innerHTML = '<tr><td colspan="7" class="muted">Aucun plat</td></tr>';
+        return;
+      }
+      const rows = state.dishFiltered.map((dish) => {
+        const availability = dish.availability || {};
+        const level = availability.stock_level || "unknown";
+        const stockBadge = level === "critical"
+          ? '<span class="badge b-danger">rupture</span>'
+          : level === "warning"
+            ? '<span class="badge b-warn">tendu</span>'
+            : '<span class="badge b-ok">ok</span>';
+        const activeBadge = Number(dish.is_active) === 1
+          ? '<span class="badge b-ok">oui</span>'
+          : '<span class="badge b-danger">non</span>';
+
+        const cls = state.selectedDishId === dish.id ? "row-selected" : "";
+
+        return `
+          <tr class="${cls}" data-dish-id="${dish.id}">
+            <td><strong>${dish.name}</strong><br><span class="muted">#${dish.id}</span></td>
+            <td>${dish.course}</td>
+            <td>${dish.diet}</td>
+            <td>${dish.style}</td>
+            <td>${fmt(dish.base_price_eur)} €</td>
+            <td>${stockBadge}</td>
+            <td>${activeBadge}</td>
+          </tr>
+        `;
+      }).join("");
+      els.dishesBody.innerHTML = rows;
+      [...els.dishesBody.querySelectorAll("tr[data-dish-id]")].forEach((tr) => {
+        tr.addEventListener("click", () => selectDish(Number(tr.dataset.dishId)));
+      });
+    }
+
+    function setDishEditorEnabled(enabled) {
+      [els.dName, els.dCourse, els.dDiet, els.dStyle, els.dPrice, els.dImage, els.dStory, els.dActive].forEach((input) => {
+        input.disabled = !enabled;
+      });
+      els.saveDishBtn.disabled = !enabled;
+      els.cancelDishBtn.disabled = !enabled;
+    }
+
+    function clearDishEditor() {
+      state.selectedDishId = null;
+      setDishEditorEnabled(false);
+      [els.dId, els.dName, els.dStyle, els.dPrice, els.dImage, els.dStory, els.dLive].forEach((input) => {
+        input.value = "";
+      });
+      els.dCourse.value = "main";
+      els.dDiet.value = "omnivore";
+      els.dActive.value = "1";
+      els.dishHint.textContent = "Selectionne un plat";
+      renderDishes();
+    }
+
+    function selectDish(id) {
+      state.selectedDishId = id;
+      const dish = selectedDish();
+      if (!dish) {
+        clearDishEditor();
+        return;
+      }
+      setDishEditorEnabled(true);
+      els.dishHint.textContent = `${dish.name} (#${dish.id})`;
+      els.dId.value = String(dish.id);
+      els.dName.value = dish.name || "";
+      els.dCourse.value = dish.course || "main";
+      els.dDiet.value = dish.diet || "omnivore";
+      els.dStyle.value = dish.style || "";
+      els.dPrice.value = fmt(dish.base_price_eur || 0);
+      els.dImage.value = dish.image_url || "";
+      els.dStory.value = dish.story || "";
+      els.dActive.value = String(Number(dish.is_active) === 1 ? 1 : 0);
+      const availability = dish.availability || {};
+      els.dLive.value = `${availability.stock_level || "unknown"} / risques ${availability.risk_count || 0}`;
+      renderDishes();
+    }
+
+    async function loadDishes(showStatus = true) {
+      if (showStatus) {
+        setStatus("Sync plats...");
+      }
+      const response = await api("/api/admin/dishes");
+      state.dishes = response.dishes || [];
+      const activeCount = state.dishes.filter((dish) => Number(dish.is_active) === 1).length;
+      els.kpiDishes.textContent = String(activeCount);
+      applyDishFilters();
+
+      if (state.selectedDishId !== null) {
+        const exists = state.dishes.some((dish) => dish.id === state.selectedDishId);
+        if (!exists) {
+          clearDishEditor();
+        } else {
+          selectDish(state.selectedDishId);
+        }
+      }
+    }
+
+    async function saveDish() {
+      const dish = selectedDish();
+      if (!dish) {
+        setStatus("Aucun plat selectionne.", true);
+        return;
+      }
+      const payload = {
+        dish_id: dish.id,
+        name: els.dName.value.trim(),
+        course: els.dCourse.value,
+        diet: els.dDiet.value,
+        style: els.dStyle.value.trim(),
+        base_price_eur: Number(els.dPrice.value),
+        image_url: els.dImage.value.trim(),
+        story: els.dStory.value.trim(),
+        is_active: Number(els.dActive.value),
+      };
+      if (!payload.name || !payload.style || !payload.image_url || !payload.story) {
+        setStatus("Champs plat incomplets.", true);
+        return;
+      }
+      try {
+        setStatus("Mise a jour plat...");
+        await api("/api/admin/dish-update", { method: "POST", body: payload });
+        setStatus("Plat mis a jour.");
+        await loadDishes(false);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    async function loadPricing() {
+      const response = await api("/api/admin/pricing");
+      state.pricing = response.pricing || {};
+      els.pMenuDecouverte.value = fmt(state.pricing.menu_decouverte || 30);
+      els.pMenuSignature.value = fmt(state.pricing.menu_signature || 36);
+      els.pSingleEntree.value = fmt(state.pricing.single_entree || 11);
+      els.pSingleMain.value = fmt(state.pricing.single_main || 24);
+      els.pSingleDessert.value = fmt(state.pricing.single_dessert || 8);
+    }
+
+    async function savePricing(key, value) {
+      if (Number.isNaN(value) || value <= 0) {
+        setStatus("Prix invalide.", true);
+        return;
+      }
+      try {
+        setStatus(`Mise a jour prix ${key}...`);
+        await api("/api/admin/pricing-set", {
+          method: "POST",
+          body: { key, amount_eur: value },
+        });
+        setStatus("Prix mis a jour.");
+        await Promise.all([loadPricing(), loadDishes(false)]);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    async function loadStockInsights() {
+      const response = await api("/api/admin/stock-insights");
+      const critical = response.critical || [];
+      const warning = response.warning || [];
+      const replacements = response.replacement_suggestions || [];
+
+      els.insightsSummary.textContent = `Critiques: ${critical.length} • Vigilance: ${warning.length} • Suggestions: ${replacements.length}`;
+      const criticalRows = critical.slice(0, 8).map((item) => `
+        <div class="item"><strong>${item.name}</strong> - ${fmt(item.stock)} ${item.unit} (seuil ${fmt(item.min_stock)})<br><span class="muted">${item.supplier} • ${item.provenance}</span></div>
+      `).join("");
+      const replacementRows = replacements.slice(0, 8).map((row) => {
+        const alts = (row.alternatives || []).map((alt) => alt.name).join(" • ") || "aucune alternative";
+        return `<div class="item"><strong>${row.ingredient_name}</strong> -> ${alts}</div>`;
+      }).join("");
+      els.insightsList.innerHTML = criticalRows + replacementRows || '<div class="item muted">Aucune alerte.</div>';
+    }
+
+    function renderOrders() {
+      if (!state.orders.length) {
+        els.ordersBody.innerHTML = '<tr><td colspan="7" class="muted">Aucune commande pour cette date.</td></tr>';
+        return;
+      }
+      els.ordersBody.innerHTML = state.orders.map((row) => {
+        const hour = (row.created_at || "").slice(11, 19);
+        const dishes = (row.dishes || []).map((item) => `${item.course}:${item.dish_name}`).join(" • ");
+        return `
+          <tr>
+            <td>${row.ticket_no}</td>
+            <td>${hour}</td>
+            <td>${row.table_number || "-"}</td>
+            <td>${row.menu_label}<br><span class="muted">${row.pairing}</span></td>
+            <td>${row.party_size}</td>
+            <td>${fmt(row.price_eur)} €</td>
+            <td>${dishes}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadOrdersForDate() {
+      const date = els.ordersDate.value || nowDateInputValue();
+      try {
+        setStatus(`Chargement commandes ${date}...`);
+        const response = await api(`/api/admin/orders?date=${encodeURIComponent(date)}`);
+        state.orders = response.orders || [];
+        els.ordersSummary.textContent = `Date ${date} • ${response.count || 0} commande(s) • CA ${fmt(response.total_revenue_eur || 0)} €`;
+        renderOrders();
+        setStatus("Commandes chargees.");
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    function downloadOrdersCsv() {
+      const date = els.ordersDate.value || nowDateInputValue();
+      window.open(`/api/admin/export/orders.csv?date=${encodeURIComponent(date)}`, "_blank", "noopener");
+    }
+
+    function downloadOrdersPdf() {
+      const date = els.ordersDate.value || nowDateInputValue();
+      window.open(`/api/admin/export/orders.pdf?date=${encodeURIComponent(date)}`, "_blank", "noopener");
+    }
+
+    async function fullRefresh(showStatus = true) {
+      if (state.loading) {
+        return;
+      }
+      state.loading = true;
+      try {
+        await Promise.all([
+          loadIngredients(showStatus),
+          loadDishes(showStatus),
+          loadPricing(),
+          loadStockInsights(),
+        ]);
+        if (showStatus) {
+          setStatus("Donnees admin synchronisees.");
+        }
+      } catch (error) {
+        setStatus(`Erreur sync: ${error.message}`, true);
+      } finally {
+        state.loading = false;
+      }
+    }
+
+    function bindEvents() {
+      els.ingSearch.addEventListener("input", applyIngredientFilters);
+      els.ingCategory.addEventListener("change", applyIngredientFilters);
+      els.ingLowOnly.addEventListener("change", applyIngredientFilters);
+      els.ingClear.addEventListener("click", () => {
+        els.ingSearch.value = "";
+        els.ingCategory.value = "";
+        els.ingLowOnly.checked = false;
+        applyIngredientFilters();
+      });
+      els.refreshIngredientsBtn.addEventListener("click", () => loadIngredients(true).catch((error) => setStatus(error.message, true)));
+      els.saveIngredientBtn.addEventListener("click", saveIngredient);
+      els.setStockBtn.addEventListener("click", setIngredientStock);
+      els.cancelIngredientBtn.addEventListener("click", clearIngredientEditor);
+      els.createIngredientBtn.addEventListener("click", createIngredient);
+
+      els.dishSearch.addEventListener("input", applyDishFilters);
+      els.dishCourse.addEventListener("change", applyDishFilters);
+      els.dishActive.addEventListener("change", applyDishFilters);
+      els.dishClear.addEventListener("click", () => {
+        els.dishSearch.value = "";
+        els.dishCourse.value = "";
+        els.dishActive.value = "";
+        applyDishFilters();
+      });
+      els.refreshDishesBtn.addEventListener("click", () => loadDishes(true).catch((error) => setStatus(error.message, true)));
+      els.saveDishBtn.addEventListener("click", saveDish);
+      els.cancelDishBtn.addEventListener("click", clearDishEditor);
+
+      els.saveMenuDecouverte.addEventListener("click", () => savePricing("menu_decouverte", Number(els.pMenuDecouverte.value)));
+      els.saveMenuSignature.addEventListener("click", () => savePricing("menu_signature", Number(els.pMenuSignature.value)));
+      els.saveSingleEntree.addEventListener("click", () => savePricing("single_entree", Number(els.pSingleEntree.value)));
+      els.saveSingleMain.addEventListener("click", () => savePricing("single_main", Number(els.pSingleMain.value)));
+      els.saveSingleDessert.addEventListener("click", () => savePricing("single_dessert", Number(els.pSingleDessert.value)));
+
+      els.refreshInsightsBtn.addEventListener("click", () => loadStockInsights().catch((error) => setStatus(error.message, true)));
+
+      els.loadOrdersBtn.addEventListener("click", loadOrdersForDate);
+      els.downloadCsvBtn.addEventListener("click", downloadOrdersCsv);
+      els.downloadPdfBtn.addEventListener("click", downloadOrdersPdf);
+    }
+
+    function boot() {
+      els.ordersDate.value = nowDateInputValue();
+      bindEvents();
+      fullRefresh(true);
+      loadOrdersForDate();
+      setInterval(() => fullRefresh(false), 20000);
+    }
+
+    boot();
+  </script>
+</body>
+</html>

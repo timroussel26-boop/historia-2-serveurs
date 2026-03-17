@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="Entree HistorIA">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2d6a4f" />
+      <stop offset="100%" stop-color="#95d5b2" />
+    </linearGradient>
+    <radialGradient id="plate" cx="50%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#f1faee" />
+      <stop offset="100%" stop-color="#e9f5ec" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)" />
+  <circle cx="600" cy="330" r="220" fill="url(#plate)" opacity="0.97" />
+  <ellipse cx="600" cy="330" rx="170" ry="105" fill="#cde7d8" opacity="0.9" />
+  <circle cx="545" cy="320" r="34" fill="#f77f00" />
+  <circle cx="602" cy="298" r="28" fill="#e63946" />
+  <circle cx="658" cy="332" r="30" fill="#2a9d8f" />
+  <text x="600" y="602" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="46" font-weight="700">HistorIA Entree</text>
+</svg>

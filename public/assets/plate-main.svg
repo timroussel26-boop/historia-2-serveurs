@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="Plat HistorIA">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d3557" />
+      <stop offset="100%" stop-color="#457b9d" />
+    </linearGradient>
+    <radialGradient id="plate" cx="50%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#fff8e7" />
+      <stop offset="100%" stop-color="#f2e8cf" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)" />
+  <circle cx="600" cy="330" r="220" fill="url(#plate)" opacity="0.97" />
+  <ellipse cx="600" cy="330" rx="176" ry="106" fill="#f8df9a" opacity="0.88" />
+  <rect x="485" y="285" width="230" height="90" rx="44" fill="#bc6c25" />
+  <circle cx="520" cy="320" r="22" fill="#386641" />
+  <circle cx="680" cy="330" r="26" fill="#e76f51" />
+  <text x="600" y="602" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="46" font-weight="700">HistorIA Plat</text>
+</svg>

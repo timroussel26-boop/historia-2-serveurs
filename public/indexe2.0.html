@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HistorIA - Menu Personnalisé</title>
+  <style>
+    :root {
+      --bg: #f4f1e8;
+      --panel: #fffdf8;
+      --panel-2: #f9f6ef;
+      --ink: #20332b;
+      --muted: #5a6a5f;
+      --line: rgba(32, 51, 43, 0.15);
+      --brand: #1f7a52;
+      --brand-2: #2f9a68;
+      --gold: #d8a73e;
+      --ok: #2b8a52;
+      --warn: #b1781e;
+      --danger: #a83d3d;
+      --shadow: 0 14px 30px rgba(26, 43, 35, 0.12);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(216, 167, 62, 0.11), transparent 28%),
+        radial-gradient(circle at 100% 0%, rgba(47, 154, 104, 0.13), transparent 30%),
+        var(--bg);
+      font-family: "Avenir Next", "SF Pro Text", "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #143e30, #1c5a42 45%, #267452);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 8px;
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+      letter-spacing: 0.01em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 900px;
+      font-size: 0.98rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .offer {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      padding: 11px;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      box-shadow: 0 5px 15px rgba(20, 35, 28, 0.05);
+    }
+
+    .offer:hover {
+      transform: translateY(-2px);
+      border-color: rgba(31, 122, 82, 0.35);
+    }
+
+    .offer.active {
+      border-color: rgba(31, 122, 82, 0.68);
+      box-shadow: 0 9px 20px rgba(31, 122, 82, 0.16);
+      background: linear-gradient(180deg, #fff, #f8fff9);
+    }
+
+    .offer-title {
+      margin: 0;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #1b4f38;
+    }
+
+    .offer-sub {
+      margin: 5px 0 0;
+      color: #56665b;
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr 340px;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0;
+      font-size: 1.02rem;
+      color: #1f4534;
+    }
+
+    .panel-head {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .small-link {
+      color: #225640;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    .field { margin-bottom: 11px; }
+
+    .label {
+      display: block;
+      margin-bottom: 6px;
+      color: #33473c;
+      font-size: 0.83rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    select,
+    input:not([type="radio"]),
+    textarea {
+      width: 100%;
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 66px;
+      resize: vertical;
+    }
+
+    .inline-radios {
+      display: grid;
+      gap: 7px;
+    }
+
+    .radio-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: #304338;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .radio-chip input[type="radio"] {
+      width: auto;
+      margin: 0;
+      flex: 0 0 auto;
+    }
+
+    .range-row {
+      display: flex;
+      justify-content: space-between;
+      color: #4f6356;
+      font-size: 0.82rem;
+      margin-top: 5px;
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 11px;
+      padding: 10px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(120deg, #1f7a52, #2e9464);
+    }
+
+    .btn-secondary {
+      color: #1f3f31;
+      background: #eef4ef;
+      border: 1px solid rgba(31, 64, 48, 0.16);
+    }
+
+    .btn-danger {
+      color: #8e3333;
+      background: #fff2f2;
+      border: 1px solid rgba(168, 61, 61, 0.2);
+    }
+
+    .status {
+      margin: 0 0 10px;
+      border: 1px solid rgba(39, 94, 144, 0.25);
+      border-radius: 11px;
+      background: #eff6ff;
+      color: #225683;
+      padding: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .status.error {
+      border-color: rgba(168, 61, 61, 0.22);
+      background: #fff2f2;
+      color: #9d3b3b;
+    }
+
+    .menu-summary {
+      background: linear-gradient(180deg, #fff, #f7f4ee);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .summary-title {
+      margin: 0;
+      font-size: 1.02rem;
+      color: #1e4d38;
+      font-weight: 800;
+    }
+
+    .summary-line {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #3d5246;
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .badge.ok { background: #eefaf2; color: #226a41; border-color: rgba(43, 138, 82, 0.22); }
+    .badge.warn { background: #fff8eb; color: #8f621a; border-color: rgba(177, 120, 30, 0.24); }
+    .badge.danger { background: #fff1f1; color: #9f3838; border-color: rgba(168, 61, 61, 0.24); }
+    .badge.soft { background: #eef2ef; color: #405247; border-color: rgba(64, 82, 71, 0.18); }
+
+    .courses {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .course {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .course-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      background: linear-gradient(135deg, #f3efe7, #e7dfd2);
+    }
+
+    .course-body {
+      padding: 11px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .course-type {
+      margin: 0;
+      font-size: 0.77rem;
+      letter-spacing: 0.04em;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #2a5f45;
+    }
+
+    .course-name {
+      margin: 0;
+      font-size: 1.03rem;
+      color: #1f352b;
+      line-height: 1.3;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .course-text {
+      margin: 0;
+      color: #46584e;
+      font-size: 0.9rem;
+      line-height: 1.42;
+    }
+
+    .course-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #34493d;
+      font-size: 0.88rem;
+      max-height: 120px;
+      overflow: auto;
+    }
+
+    .course-list li { margin: 2px 0; }
+
+    .stock-alerts,
+    .stock-replacements {
+      display: grid;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .stock-alert {
+      border-radius: 10px;
+      border: 1px solid rgba(177, 120, 30, 0.24);
+      background: #fff8eb;
+      color: #7f5817;
+      padding: 7px 8px;
+      font-size: 0.83rem;
+      line-height: 1.35;
+    }
+
+    .stock-alert.critical {
+      border-color: rgba(168, 61, 61, 0.24);
+      background: #fff1f1;
+      color: #8f2f2f;
+    }
+
+    .replacement {
+      border-radius: 10px;
+      border: 1px solid rgba(31, 122, 82, 0.22);
+      background: #eef8f2;
+      padding: 7px 8px;
+      font-size: 0.83rem;
+      color: #2f4e3d;
+      line-height: 1.34;
+    }
+
+    .result-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .cart-list,
+    .history-list {
+      display: grid;
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .item {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 9px;
+      display: grid;
+      gap: 4px;
+      font-size: 0.86rem;
+      color: #3c5044;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+    }
+
+    .item strong { color: #1f3c2f; }
+
+    .item .tiny {
+      font-size: 0.75rem;
+      color: #5d6d62;
+    }
+
+    .item button {
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.77rem;
+      font-weight: 700;
+      width: auto;
+      justify-self: end;
+    }
+
+    .ticket {
+      margin-top: 10px;
+      border: 1px dashed rgba(32, 51, 43, 0.3);
+      border-radius: 12px;
+      background: #fffcf4;
+      padding: 10px;
+      font-size: 0.86rem;
+      display: grid;
+      gap: 5px;
+    }
+
+    .ticket h4 {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #1f3f31;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 1220px) {
+      .offer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .layout { grid-template-columns: 1fr; }
+      .result-actions { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .container { padding: 14px; }
+      .hero { padding: 16px; }
+      .offer-grid { grid-template-columns: 1fr; }
+      .hero-meta { width: 100%; }
+      .pill { width: 100%; text-align: center; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .hero, .offer-grid, .panel.controls, .panel.sidebar { display: none !important; }
+      .container, .layout, .panel.result { max-width: 100%; width: 100%; }
+      .panel.result { border: 0; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-top">
+        <h1>HistorIA - Parcours Menu Restaurant</h1>
+        <div class="hero-meta">
+          <span class="pill" id="health-pill">Serveur: ...</span>
+          <a class="pill" href="/client-simple.html">Version simple</a>
+          <a class="pill" href="/admin.html">Admin</a>
+        </div>
+      </div>
+      <p>Choisis une offre, personnalise selon ton client, puis valide: panier, ticket et historique sont intégrés.</p>
+    </header>
+
+    <section class="offer-grid" id="offer-grid">
+      <article class="offer active" data-offer="decouverte" data-price="30">
+        <p class="offer-title">Menu découverte - 30 €</p>
+        <p class="offer-sub">Entrée + Plat ou Plat + Dessert</p>
+      </article>
+      <article class="offer" data-offer="signature" data-price="36">
+        <p class="offer-title">Menu signature - 36 €</p>
+        <p class="offer-sub">Entrée + Plat + Dessert</p>
+      </article>
+      <article class="offer" data-offer="single_entree" data-price="11">
+        <p class="offer-title">Entrée seule - 11 €</p>
+        <p class="offer-sub">Une entrée personnalisée</p>
+      </article>
+      <article class="offer" data-offer="single_main" data-price="24">
+        <p class="offer-title">Plat seul - 24 €</p>
+        <p class="offer-sub">Un plat principal personnalisé</p>
+      </article>
+      <article class="offer" data-offer="single_dessert" data-price="8">
+        <p class="offer-title">Dessert seul - 8 €</p>
+        <p class="offer-sub">Un dessert personnalisé</p>
+      </article>
+    </section>
+
+    <main class="layout">
+      <section class="panel controls">
+        <div class="panel-head">
+          <h2>Personnalisation</h2>
+          <span class="muted" id="offer-label">Offre: Menu découverte</span>
+        </div>
+
+        <div class="field" id="discovery-wrap">
+          <span class="label">Formule découverte</span>
+          <div class="inline-radios">
+            <label class="radio-chip"><input type="radio" name="discovery-pair" value="entree_main" checked> Entrée + Plat</label>
+            <label class="radio-chip"><input type="radio" name="discovery-pair" value="main_dessert"> Plat + Dessert</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="table-number">Numéro de table</label>
+          <input id="table-number" type="text" placeholder="ex: 12">
+        </div>
+
+        <div class="field">
+          <label class="label" for="diet">Régime</label>
+          <select id="diet">
+            <option value="omnivore">Classique (viande et poisson)</option>
+            <option value="pescatarian">Poisson (sans viande)</option>
+            <option value="vegetarian">Végétarien (sans viande, sans poisson)</option>
+            <option value="vegan">Vegan (100% végétal)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="style">Style culinaire</label>
+          <select id="style">
+            <option value="surprise">Surprends-moi</option>
+            <option value="terroir">Terroir</option>
+            <option value="classique">Classique</option>
+            <option value="fraicheur">Fraîcheur</option>
+            <option value="exotique">Exotique</option>
+            <option value="fusion">Fusion</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="goal">Priorité IA</label>
+          <select id="goal">
+            <option value="anti_waste">Réduire le gaspillage</option>
+            <option value="low_carbon">Réduire l'empreinte carbone</option>
+            <option value="high_protein">Version plus protéinée</option>
+            <option value="comfort">Version réconfortante</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="party-size">Nombre de couverts</label>
+          <input id="party-size" type="number" min="1" max="12" value="1">
+        </div>
+
+        <div class="field">
+          <label class="label" for="excluded">Ingrédients à éviter</label>
+          <textarea id="excluded" placeholder="ex: anchois, coriandre, miel"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" id="generate-btn">Générer la proposition</button>
+          <button class="btn-secondary" id="regen-btn">Régénérer</button>
+          <button class="btn-danger" id="reset-btn">Réinitialiser</button>
+        </div>
+      </section>
+
+      <section class="panel result">
+        <div class="panel-head">
+          <h2>Proposition client</h2>
+          <span class="muted" id="stock-overall">Stock: ...</span>
+        </div>
+
+        <p class="status" id="status">Choisis l'offre et clique sur générer.</p>
+
+        <div id="result-empty" class="menu-summary">
+          <p class="summary-title">Aucune proposition pour le moment</p>
+          <p class="summary-line">Les résultats détaillés (histoire, photo, stock, ticket) apparaîtront ici.</p>
+        </div>
+
+        <div id="result-content" style="display:none;">
+          <section class="menu-summary">
+            <p class="summary-title" id="menu-headline"></p>
+            <p class="summary-line" id="menu-line-1"></p>
+            <p class="summary-line" id="menu-story"></p>
+            <p class="summary-line" id="menu-service"></p>
+            <div class="badges" id="menu-badges"></div>
+          </section>
+
+          <section class="courses" id="courses"></section>
+
+          <div class="result-actions">
+            <button class="btn-primary" id="order-now-btn">Commander maintenant</button>
+            <button class="btn-secondary" id="add-cart-btn">Ajouter au panier</button>
+            <button class="btn-secondary" id="regen-bottom-btn">Régénérer cette proposition</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel sidebar">
+        <div class="panel-head">
+          <h3>Panier & Commandes</h3>
+          <span class="muted" id="cart-total">0 item</span>
+        </div>
+
+        <div class="actions" style="margin-top:0; margin-bottom:10px;">
+          <button class="btn-primary" id="checkout-btn">Valider tout le panier</button>
+          <button class="btn-secondary" id="print-ticket-btn">Imprimer le ticket</button>
+        </div>
+
+        <div class="cart-list" id="cart-list"></div>
+
+        <section class="ticket" id="last-ticket" style="display:none;"></section>
+
+        <hr style="border:none; border-top:1px solid var(--line); margin:12px 0;">
+
+        <div class="panel-head" style="margin-bottom:8px;">
+          <h3>Historique récent</h3>
+        </div>
+        <div class="history-list" id="history-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_CART = "historia_cart_v3";
+    const STORAGE_HISTORY = "historia_history_v3";
+
+    const state = {
+      selectedOffer: "decouverte",
+      currentProposal: null,
+      rejectedIds: [],
+      generating: false,
+      pricing: {
+        menu_decouverte: 30,
+        menu_signature: 36,
+        single_entree: 11,
+        single_main: 24,
+        single_dessert: 8,
+      },
+      cart: JSON.parse(localStorage.getItem(STORAGE_CART) || "[]"),
+      history: JSON.parse(localStorage.getItem(STORAGE_HISTORY) || "[]"),
+      lastTicket: null,
+    };
+
+    const els = {
+      healthPill: document.getElementById("health-pill"),
+      status: document.getElementById("status"),
+      stockOverall: document.getElementById("stock-overall"),
+      offerLabel: document.getElementById("offer-label"),
+      offerGrid: document.getElementById("offer-grid"),
+      discoveryWrap: document.getElementById("discovery-wrap"),
+      discoveryPair: document.querySelectorAll("input[name='discovery-pair']"),
+      tableNumber: document.getElementById("table-number"),
+      diet: document.getElementById("diet"),
+      style: document.getElementById("style"),
+      goal: document.getElementById("goal"),
+      partySize: document.getElementById("party-size"),
+      excluded: document.getElementById("excluded"),
+      generateBtn: document.getElementById("generate-btn"),
+      regenBtn: document.getElementById("regen-btn"),
+      resetBtn: document.getElementById("reset-btn"),
+      resultEmpty: document.getElementById("result-empty"),
+      resultContent: document.getElementById("result-content"),
+      menuHeadline: document.getElementById("menu-headline"),
+      menuLine1: document.getElementById("menu-line-1"),
+      menuStory: document.getElementById("menu-story"),
+      menuService: document.getElementById("menu-service"),
+      menuBadges: document.getElementById("menu-badges"),
+      courses: document.getElementById("courses"),
+      orderNowBtn: document.getElementById("order-now-btn"),
+      addCartBtn: document.getElementById("add-cart-btn"),
+      regenBottomBtn: document.getElementById("regen-bottom-btn"),
+      cartTotal: document.getElementById("cart-total"),
+      cartList: document.getElementById("cart-list"),
+      checkoutBtn: document.getElementById("checkout-btn"),
+      printTicketBtn: document.getElementById("print-ticket-btn"),
+      lastTicket: document.getElementById("last-ticket"),
+      historyList: document.getElementById("history-list"),
+    };
+
+    function setStatus(message, isError = false) {
+      els.status.textContent = message;
+      els.status.classList.toggle("error", isError);
+    }
+
+    async function callApi(path, options = {}) {
+      const response = await fetch(path, {
+        method: options.method || "GET",
+        headers: { "Content-Type": "application/json" },
+        body: options.body ? JSON.stringify(options.body) : undefined,
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.error || `Erreur ${response.status}`);
+      }
+      return payload;
+    }
+
+    async function refreshPricing() {
+      try {
+        const result = await callApi("/api/pricing");
+        if (result && result.pricing) {
+          state.pricing = {
+            ...state.pricing,
+            ...result.pricing,
+          };
+          updateOfferCards();
+          updateOfferUI();
+        }
+      } catch {
+        // fallback local prices only
+      }
+    }
+
+    function selectedDiscoveryPair() {
+      const checked = [...els.discoveryPair].find((item) => item.checked);
+      return checked ? checked.value : "entree_main";
+    }
+
+    function offerMeta(offer) {
+      const map = {
+        decouverte: { label: "Menu découverte", price: state.pricing.menu_decouverte || 30 },
+        signature: { label: "Menu signature", price: state.pricing.menu_signature || 36 },
+        single_entree: { label: "Entrée seule", price: state.pricing.single_entree || 11 },
+        single_main: { label: "Plat seul", price: state.pricing.single_main || 24 },
+        single_dessert: { label: "Dessert seul", price: state.pricing.single_dessert || 8 },
+      };
+      return map[offer] || map.decouverte;
+    }
+
+    function updateOfferCards() {
+      const subtitles = {
+        decouverte: "Entrée + Plat ou Plat + Dessert",
+        signature: "Entrée + Plat + Dessert",
+        single_entree: "Une entrée personnalisée",
+        single_main: "Un plat principal personnalisé",
+        single_dessert: "Un dessert personnalisé",
+      };
+      [...els.offerGrid.querySelectorAll(".offer")].forEach((card) => {
+        const offer = card.dataset.offer || "decouverte";
+        const meta = offerMeta(offer);
+        card.dataset.price = String(meta.price);
+        const title = card.querySelector(".offer-title");
+        const sub = card.querySelector(".offer-sub");
+        if (title) {
+          title.textContent = `${meta.label} - ${meta.price} €`;
+        }
+        if (sub) {
+          sub.textContent = subtitles[offer] || "";
+        }
+      });
+    }
+
+    function updateOfferUI() {
+      const offer = state.selectedOffer;
+      const meta = offerMeta(offer);
+      els.offerLabel.textContent = `Offre: ${meta.label} (${meta.price}€)`;
+      els.discoveryWrap.style.display = offer === "decouverte" ? "block" : "none";
+
+      [...els.offerGrid.querySelectorAll(".offer")].forEach((card) => {
+        card.classList.toggle("active", card.dataset.offer === offer);
+      });
+    }
+
+    function collectPayload() {
+      const payload = {
+        diet: els.diet.value,
+        style: els.style.value,
+        goal: els.goal.value,
+        party_size: Math.max(1, Math.min(12, Number(els.partySize.value || 1))),
+        excluded_ingredients: els.excluded.value
+          .split(",")
+          .map((value) => value.trim())
+          .filter(Boolean),
+        rejected_ids: [...state.rejectedIds],
+      };
+
+      if (state.selectedOffer === "decouverte") {
+        payload.menu_type = "decouverte";
+        payload.discovery_pair = selectedDiscoveryPair();
+      } else if (state.selectedOffer === "signature") {
+        payload.menu_type = "signature";
+      } else if (state.selectedOffer === "single_entree") {
+        payload.menu_type = "single";
+        payload.single_course = "entree";
+      } else if (state.selectedOffer === "single_dessert") {
+        payload.menu_type = "single";
+        payload.single_course = "dessert";
+      } else {
+        payload.menu_type = "single";
+        payload.single_course = "main";
+      }
+
+      return payload;
+    }
+
+    function formatDate(value) {
+      const dt = new Date(value);
+      return Number.isNaN(dt.getTime()) ? value : dt.toLocaleString("fr-FR");
+    }
+
+    function stockStatusFromCourse(course) {
+      const composition = course.composition || [];
+      if (!composition.length) {
+        return { level: "warn", label: "Stock inconnu", detail: "Composition indisponible" };
+      }
+
+      const hasShortage = composition.some((item) => Number(item.stock_now) < Number(item.quantity));
+      if (hasShortage) {
+        return { level: "danger", label: "Indisponible", detail: "Rupture sur au moins un ingrédient" };
+      }
+
+      const hasRisk = composition.some((item) => item.risk_low_stock);
+      if (hasRisk) {
+        return { level: "warn", label: "Stock tendu", detail: "Certains ingrédients atteignent le seuil" };
+      }
+
+      return { level: "ok", label: "Disponible", detail: "Stock validé avant commande" };
+    }
+
+    function overallStockStatus(courses) {
+      const statuses = courses.map(stockStatusFromCourse);
+      if (statuses.some((item) => item.level === "danger")) {
+        return { level: "danger", label: "Stock global: indisponible" };
+      }
+      if (statuses.some((item) => item.level === "warn")) {
+        return { level: "warn", label: "Stock global: sous vigilance" };
+      }
+      return { level: "ok", label: "Stock global: disponible" };
+    }
+
+    const REMOTE_FALLBACK_IMAGES = {
+      entree: [
+        "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80",
+      ],
+      main: [
+        "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1400&q=80",
+      ],
+      dessert: [
+        "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=1400&q=80",
+        "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=1400&q=80",
+      ],
+    };
+
+    function localFallbackImageByCourse(courseKey) {
+      if (courseKey === "entree") {
+        return "/assets/plate-entree.svg";
+      }
+      if (courseKey === "dessert") {
+        return "/assets/plate-dessert.svg";
+      }
+      if (courseKey === "main") {
+        return "/assets/plate-main.svg";
+      }
+      return "/assets/plate-generic.svg";
+    }
+
+    function fallbackImageByCourse(courseKey) {
+      const remote = REMOTE_FALLBACK_IMAGES[courseKey] || REMOTE_FALLBACK_IMAGES.main;
+      return remote[0] || localFallbackImageByCourse(courseKey);
+    }
+
+    function buildImageCandidates(primaryUrl, courseKey) {
+      const remote = REMOTE_FALLBACK_IMAGES[courseKey] || REMOTE_FALLBACK_IMAGES.main;
+      const result = [];
+      const pushUnique = (value) => {
+        if (!value || typeof value !== "string") {
+          return;
+        }
+        if (!result.includes(value)) {
+          result.push(value);
+        }
+      };
+      pushUnique(primaryUrl);
+      remote.forEach(pushUnique);
+      pushUnique(localFallbackImageByCourse(courseKey));
+      pushUnique(localFallbackImageByCourse("generic"));
+      return result;
+    }
+
+    window.handleDishImageError = (img) => {
+      const raw = img.getAttribute("data-fallbacks") || "";
+      const candidates = raw
+        .split(",")
+        .map((item) => decodeURIComponent(item))
+        .filter(Boolean);
+      const currentIndex = Number(img.getAttribute("data-fallback-index") || "0");
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < candidates.length) {
+        img.setAttribute("data-fallback-index", String(nextIndex));
+        img.src = candidates[nextIndex];
+        return;
+      }
+      img.onerror = null;
+      img.src = localFallbackImageByCourse("generic");
+    };
+
+    function createBadge(level, text) {
+      return `<span class="badge ${level}">${text}</span>`;
+    }
+
+    function renderCourses(courses) {
+      els.courses.innerHTML = courses.map((course) => {
+        const key = course.course || "main";
+        const label = course.course_label || (key === "entree" ? "Entrée" : key === "dessert" ? "Dessert" : "Plat");
+        const status = stockStatusFromCourse(course);
+        const imageCandidates = buildImageCandidates(course.image_url, key);
+        const img = imageCandidates[0] || localFallbackImageByCourse(key);
+        const encodedImageCandidates = imageCandidates.map((item) => encodeURIComponent(item)).join(",");
+        const composition = (course.composition || [])
+          .slice(0, 8)
+          .map((item) => `<li>${item.name} - ${item.quantity} ${item.unit}</li>`)
+          .join("");
+        const origins = (course.provenance || []).slice(0, 4).map((origin) => createBadge("soft", origin)).join("");
+        const alerts = (course.stock_alerts || []).map((alert) => `
+          <div class="stock-alert ${alert.level === "critical" ? "critical" : ""}">
+            <strong>${alert.ingredient_name || "Ingrédient"}</strong> - ${alert.message || "Alerte stock"}
+          </div>
+        `).join("");
+        const replacements = (course.replacement_suggestions || []).map((row) => {
+          const alternatives = (row.alternatives || [])
+            .map((alt) => `${alt.name} (${alt.provenance})`)
+            .join(" • ");
+          return `
+            <div class="replacement">
+              <strong>Alternative pour ${row.ingredient_name}:</strong> ${alternatives || "Aucune suggestion"}
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <article class="course">
+            <img
+              class="course-image"
+              src="${img}"
+              alt="${course.name || label}"
+              loading="lazy"
+              data-fallbacks="${encodedImageCandidates}"
+              data-fallback-index="0"
+              onerror="window.handleDishImageError(this)"
+            >
+            <div class="course-body">
+              <p class="course-type">${label}</p>
+              <div class="course-grid">
+                <div>
+                  <h4 class="course-name">${course.name || `${label} du jour`}</h4>
+                  <p class="course-text">${course.description || "Proposition personnalisée en fonction du stock et du style demandé."}</p>
+                </div>
+                <div class="badges">
+                  ${createBadge(status.level, status.label)}
+                  ${createBadge("soft", `${course.carbon_footprint_kg} kg CO₂`)}
+                </div>
+              </div>
+              <p class="course-text"><strong>Histoire:</strong> ${course.history || "Narration indisponible."}</p>
+              <div class="badges">${origins}</div>
+              <ul class="course-list">${composition}</ul>
+              <div class="stock-alerts">${alerts}</div>
+              <div class="stock-replacements">${replacements}</div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderProposal(data) {
+      const menu = data.menu || {};
+      const courses = menu.courses || [];
+      if (!courses.length) {
+        throw new Error("Aucune course disponible dans la réponse.");
+      }
+
+      const stock = overallStockStatus(courses);
+      const stockIntel = menu.stock_intelligence || {};
+      const stockLabelMap = {
+        critical: "Stock global: indisponible",
+        warning: "Stock global: sous vigilance",
+        ok: "Stock global: disponible",
+      };
+      const stockLevel = stockIntel.level || stock.level;
+      els.stockOverall.textContent = stockLabelMap[stockLevel] || stock.label;
+
+      els.resultEmpty.style.display = "none";
+      els.resultContent.style.display = "block";
+      els.menuHeadline.textContent = menu.menu_headline || `${menu.label || "Proposition"} - ${menu.pairing || "Service"}`;
+      els.menuLine1.textContent = `${menu.label || "Formule"} • ${menu.pairing || ""} • Prix client: ${menu.price_eur || "?"} € • CO₂ total: ${menu.total_carbon_kg || "?"} kg`;
+      els.menuStory.textContent = menu.menu_story || "Composition cohérente selon les préférences client.";
+      els.menuService.textContent = menu.service_pitch || "Service conseillé en enchaînement fluide des courses.";
+
+      els.menuBadges.innerHTML = [
+        createBadge(stockLevel === "critical" ? "danger" : stockLevel === "warning" ? "warn" : "ok", els.stockOverall.textContent),
+        createBadge("soft", `IA: ${menu.natural_language_engine || "rules:fallback"}`),
+        createBadge("soft", `Couverts: ${data.meta?.party_size || 1}`),
+        createBadge("soft", `Alertes stock: ${(stockIntel.critical_alerts || 0) + (stockIntel.warning_alerts || 0)}`),
+      ].join("");
+
+      renderCourses(courses);
+
+      const canOrder = stockLevel !== "critical" && stock.level !== "danger";
+      els.orderNowBtn.disabled = !canOrder;
+      els.addCartBtn.disabled = !canOrder;
+    }
+
+    function saveCart() {
+      localStorage.setItem(STORAGE_CART, JSON.stringify(state.cart));
+    }
+
+    function saveHistory() {
+      localStorage.setItem(STORAGE_HISTORY, JSON.stringify(state.history));
+    }
+
+    function renderCart() {
+      els.cartTotal.textContent = `${state.cart.length} article${state.cart.length > 1 ? "s" : ""}`;
+
+      if (!state.cart.length) {
+        els.cartList.innerHTML = '<div class="item muted">Panier vide.</div>';
+        return;
+      }
+
+      els.cartList.innerHTML = state.cart.map((item) => `
+        <article class="item">
+          <div class="item-top">
+            <strong>${item.menu_label}</strong>
+            <span>${item.price_eur} €</span>
+          </div>
+          <span class="tiny">${item.pairing} • Table ${item.table_number || "-"} • ${item.party_size} couvert(s)</span>
+          <span class="tiny">${item.courses.map((c) => `${c.course_label}: ${c.name}`).join(" • ")}</span>
+          <button class="btn-danger" data-remove="${item.id}">Retirer</button>
+        </article>
+      `).join("");
+
+      [...els.cartList.querySelectorAll("button[data-remove]")].forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-remove");
+          state.cart = state.cart.filter((item) => item.id !== id);
+          saveCart();
+          renderCart();
+        });
+      });
+    }
+
+    function renderTicket(ticket) {
+      if (!ticket) {
+        els.lastTicket.style.display = "none";
+        els.lastTicket.innerHTML = "";
+        return;
+      }
+
+      els.lastTicket.style.display = "grid";
+      els.lastTicket.innerHTML = `
+        <h4>Ticket ${ticket.ticket_no}</h4>
+        <div><strong>Table:</strong> ${ticket.table_number || "-"}</div>
+        <div><strong>Offre:</strong> ${ticket.menu_label}</div>
+        <div><strong>Montant:</strong> ${ticket.price_eur} €</div>
+        <div><strong>Couverts:</strong> ${ticket.party_size}</div>
+        <div><strong>Créé:</strong> ${formatDate(ticket.created_at)}</div>
+      `;
+    }
+
+    function renderHistory() {
+      const rows = state.history.slice(0, 20);
+      if (!rows.length) {
+        els.historyList.innerHTML = '<div class="item muted">Aucune commande enregistrée.</div>';
+        return;
+      }
+
+      els.historyList.innerHTML = rows.map((entry) => `
+        <article class="item">
+          <div class="item-top">
+            <strong>${entry.ticket_no}</strong>
+            <span>${entry.price_eur} €</span>
+          </div>
+          <span class="tiny">${entry.menu_label} • Table ${entry.table_number || "-"}</span>
+          <span class="tiny">${formatDate(entry.created_at)}</span>
+        </article>
+      `).join("");
+    }
+
+    function buildCartItemFromProposal() {
+      const proposal = state.currentProposal;
+      if (!proposal?.menu?.courses?.length) {
+        return null;
+      }
+
+      const tableNumber = els.tableNumber.value.trim();
+      return {
+        id: `cart-${Date.now()}-${Math.random().toString(16).slice(2, 7)}`,
+        created_at: new Date().toISOString(),
+        table_number: tableNumber,
+        menu_label: proposal.menu.label,
+        pairing: proposal.menu.pairing,
+        price_eur: proposal.menu.price_eur,
+        party_size: Math.max(1, Math.min(12, Number(els.partySize.value || 1))),
+        dish_ids: proposal.menu.courses.map((course) => course.dish_id),
+        courses: proposal.menu.courses.map((course) => ({
+          course: course.course,
+          course_label: course.course_label,
+          name: course.name,
+        })),
+      };
+    }
+
+    function pushHistory(ticket) {
+      state.history.unshift(ticket);
+      state.history = state.history.slice(0, 50);
+      saveHistory();
+      renderHistory();
+    }
+
+    function createTicket(baseItem, ticketNo = "") {
+      const stamp = new Date();
+      const datePart = `${stamp.getFullYear()}${String(stamp.getMonth() + 1).padStart(2, "0")}${String(stamp.getDate()).padStart(2, "0")}`;
+      const timePart = `${String(stamp.getHours()).padStart(2, "0")}${String(stamp.getMinutes()).padStart(2, "0")}${String(stamp.getSeconds()).padStart(2, "0")}`;
+      return {
+        ...baseItem,
+        ticket_no: ticketNo || `HTA-${datePart}-${timePart}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`,
+      };
+    }
+
+    async function submitOrder(item) {
+      const response = await callApi("/api/order-dish", {
+        method: "POST",
+        body: {
+          dish_ids: item.dish_ids,
+          party_size: item.party_size,
+          table_number: item.table_number,
+          menu_label: item.menu_label,
+          pairing: item.pairing,
+          price_eur: item.price_eur,
+        },
+      });
+      return response;
+    }
+
+    async function checkoutSingle(item) {
+      const result = await submitOrder(item);
+      const ticket = createTicket({
+        ...item,
+        created_at: result.timestamp || new Date().toISOString(),
+      }, result.ticket_no || "");
+      state.lastTicket = ticket;
+      renderTicket(ticket);
+      pushHistory(ticket);
+      return result;
+    }
+
+    async function orderNow() {
+      const item = buildCartItemFromProposal();
+      if (!item) {
+        setStatus("Aucune proposition active à commander.", true);
+        return;
+      }
+
+      try {
+        setStatus("Commande en cours...");
+        await checkoutSingle(item);
+        setStatus("Commande validée et ticket généré.");
+      } catch (error) {
+        setStatus(`Commande refusée: ${error.message}`, true);
+      }
+    }
+
+    function addCurrentToCart() {
+      const item = buildCartItemFromProposal();
+      if (!item) {
+        setStatus("Aucune proposition active à ajouter au panier.", true);
+        return;
+      }
+      state.cart.push(item);
+      saveCart();
+      renderCart();
+      setStatus("Proposition ajoutée au panier.");
+    }
+
+    async function checkoutCart() {
+      if (!state.cart.length) {
+        setStatus("Le panier est vide.", true);
+        return;
+      }
+
+      setStatus("Validation du panier en cours...");
+
+      const remaining = [];
+      let successCount = 0;
+      for (const item of state.cart) {
+        try {
+          await checkoutSingle(item);
+          successCount += 1;
+        } catch (error) {
+          remaining.push(item);
+        }
+      }
+
+      state.cart = remaining;
+      saveCart();
+      renderCart();
+
+      if (successCount === 0) {
+        setStatus("Aucune commande du panier n'a pu être validée.", true);
+      } else if (remaining.length > 0) {
+        setStatus(`${successCount} commande(s) validée(s), ${remaining.length} en échec.`, true);
+      } else {
+        setStatus(`Panier validé: ${successCount} commande(s) envoyée(s).`);
+      }
+    }
+
+    function clearProposalView() {
+      state.currentProposal = null;
+      state.rejectedIds = [];
+      els.resultEmpty.style.display = "block";
+      els.resultContent.style.display = "none";
+      els.stockOverall.textContent = "Stock: ...";
+      setStatus("Session réinitialisée.");
+    }
+
+    async function generateProposal(forceRegen = false) {
+      if (state.generating) {
+        return;
+      }
+
+      if (forceRegen && state.currentProposal?.menu?.courses?.length) {
+        for (const course of state.currentProposal.menu.courses) {
+          if (course?.dish_id) {
+            state.rejectedIds.push(course.dish_id);
+          }
+        }
+      }
+
+      state.generating = true;
+      els.generateBtn.disabled = true;
+      els.regenBtn.disabled = true;
+      setStatus("HistorIA construit une proposition cohérente...");
+
+      try {
+        const payload = collectPayload();
+        const data = await callApi("/api/generate-dish", { method: "POST", body: payload });
+        state.currentProposal = data;
+        renderProposal(data);
+        setStatus(`Proposition prête: ${data.menu?.label || "Formule"} (${data.menu?.pairing || ""}).`);
+      } catch (error) {
+        setStatus(`Impossible de générer: ${error.message}`, true);
+      } finally {
+        state.generating = false;
+        els.generateBtn.disabled = false;
+        els.regenBtn.disabled = false;
+      }
+    }
+
+    async function refreshHealth() {
+      try {
+        const health = await callApi("/api/health");
+        if (health.inventory_status === 200) {
+          els.healthPill.textContent = "Serveur: en ligne";
+        } else {
+          els.healthPill.textContent = "Serveur: dégradé";
+        }
+      } catch {
+        els.healthPill.textContent = "Serveur: indisponible";
+      }
+    }
+
+    function resetAll() {
+      clearProposalView();
+      els.excluded.value = "";
+      els.partySize.value = "1";
+      els.tableNumber.value = "";
+      els.goal.value = "anti_waste";
+      els.style.value = "surprise";
+      els.diet.value = "omnivore";
+      state.selectedOffer = "decouverte";
+      updateOfferUI();
+    }
+
+    function bindEvents() {
+      els.offerGrid.addEventListener("click", (event) => {
+        const card = event.target.closest(".offer");
+        if (!card) {
+          return;
+        }
+        state.selectedOffer = card.dataset.offer || "decouverte";
+        updateOfferUI();
+      });
+
+      els.generateBtn.addEventListener("click", () => generateProposal(false));
+      els.regenBtn.addEventListener("click", () => generateProposal(true));
+      els.regenBottomBtn.addEventListener("click", () => generateProposal(true));
+      els.resetBtn.addEventListener("click", resetAll);
+
+      els.orderNowBtn.addEventListener("click", orderNow);
+      els.addCartBtn.addEventListener("click", addCurrentToCart);
+      els.checkoutBtn.addEventListener("click", checkoutCart);
+      els.printTicketBtn.addEventListener("click", () => window.print());
+    }
+
+    function boot() {
+      updateOfferCards();
+      updateOfferUI();
+      renderCart();
+      renderHistory();
+      renderTicket(state.lastTicket);
+      bindEvents();
+      refreshPricing();
+      refreshHealth();
+      setInterval(refreshPricing, 45000);
+      setInterval(refreshHealth, 15000);
+    }
+
+    boot();
+  </script>
+</body>
+</html>

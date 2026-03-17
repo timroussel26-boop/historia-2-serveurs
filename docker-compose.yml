@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: historia
+      POSTGRES_USER: historia
+      POSTGRES_PASSWORD: historia
+    volumes:
+      - historia_pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  inventory:
+    build:
+      context: .
+      dockerfile: Dockerfile.inventory
+    restart: unless-stopped
+    environment:
+      DB_ENGINE: postgres
+      DATABASE_URL: postgresql://historia:historia@postgres:5432/historia
+      INVENTORY_HOST: 0.0.0.0
+      INVENTORY_PORT: 4100
+    depends_on:
+      - postgres
+    ports:
+      - "4100:4100"
+
+  ai:
+    build:
+      context: .
+      dockerfile: Dockerfile.ai
+    restart: unless-stopped
+    environment:
+      AI_HOST: 0.0.0.0
+      AI_PORT: 4200
+      INVENTORY_URL: http://inventory:4100
+      ADMIN_ALLOWED_IPS: 127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      OPENAI_API_KEY: ""
+      OPENAI_MODEL: gpt-4.1-mini
+      ORDERS_DB_PATH: /data/historia_orders.db
+    depends_on:
+      - inventory
+    volumes:
+      - historia_ai_data:/data
+    ports:
+      - "4200:4200"
+
+volumes:
+  historia_pg_data:
+  historia_ai_data:
