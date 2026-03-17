@@ -42,9 +42,10 @@ class DBConnection:
         self.postgres = postgres
 
     def _adapt_sql(self, query):
-        if self.postgres:
-            return query.replace("?", "%s")
-        return query
+    if self.postgres:
+        return query.replace("%", "%%").replace("?", "%s")
+    return query
+
 
     def execute(self, query, params=None):
         params = () if params is None else params
@@ -84,9 +85,10 @@ class DBCursor:
         self.postgres = postgres
 
     def _adapt_sql(self, query):
-        if self.postgres:
-            return query.replace("?", "%s")
-        return query
+    if self.postgres:
+        return query.replace("%", "%%").replace("?", "%s")
+    return query
+
 
     def execute(self, query, params=None):
         params = () if params is None else params
