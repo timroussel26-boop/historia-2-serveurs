@@ -1191,7 +1191,7 @@ def ensure_menu_course_templates(conn):
         filtered_templates.append(template_row)
         filtered_items.append(items)
 
-    if not filtered_templates:
+        if not filtered_templates:
         return
 
     conn.executemany(
@@ -1202,7 +1202,7 @@ def ensure_menu_course_templates(conn):
         filtered_templates,
     )
 
-        inserted_rows = conn.execute(
+    inserted_rows = conn.execute(
         """
         SELECT id, name
         FROM dish_templates
