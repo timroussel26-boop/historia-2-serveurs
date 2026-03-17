@@ -42,10 +42,11 @@ class DBConnection:
         self.postgres = postgres
 
     def _adapt_sql(self, query):
-    if self.postgres:
-        return query.replace("%", "%%").replace("?", "%s")
-    return query
-
+        if self.postgres:
+            # Psycopg uses `%` placeholders. Escape literal `%` first, then map `?` to `%s`.
+            # This prevents errors like "incomplete placeholder: '%'" on LIKE clauses.
+            return query.replace("%", "%%").replace("?", "%s")
+        return query
 
     def execute(self, query, params=None):
         params = () if params is None else params
@@ -85,10 +86,10 @@ class DBCursor:
         self.postgres = postgres
 
     def _adapt_sql(self, query):
-    if self.postgres:
-        return query.replace("%", "%%").replace("?", "%s")
-    return query
-
+        if self.postgres:
+            # Keep DBConnection behavior consistent for cursor-level calls.
+            return query.replace("%", "%%").replace("?", "%s")
+        return query
 
     def execute(self, query, params=None):
         params = () if params is None else params
