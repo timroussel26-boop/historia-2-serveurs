@@ -1484,7 +1484,10 @@ class AIServerHandler(BaseHTTPRequestHandler):
             status, payload = inventory_request("/api/metrics")
             return json_response(self, payload, status=status)
 
-        if path in {"/", "/indexe2.0.html"}:
+        if path == "/":
+            return serve_static_file(self, "historia.html")
+
+        if path == "/indexe2.0.html":
             return serve_static_file(self, "indexe2.0.html")
 
         return serve_static_file(self, path)
